@@ -199,21 +199,21 @@ export const StudentDetailPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-start sm:items-center space-x-3 min-w-0">
           <Link
             to="/students"
-            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white transition-colors"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white transition-colors shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div>
-            <div className="flex items-center space-x-3">
-              <span className="font-mono text-sm font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-mono text-sm font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md shrink-0">
                 {student.student_number}
               </span>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">{student.name}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 truncate">{student.name}</h1>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
               Course: <span className="font-semibold text-slate-700">{student.course}</span> &bull;{' '}
               Batch: <span className="font-semibold text-slate-700">{student.batch_name || 'N/A'}</span> &bull;{' '}
               College: <span className="font-semibold text-slate-700">{student.college_name || 'N/A'}</span>
@@ -221,7 +221,7 @@ export const StudentDetailPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           <button
             id="edit-student-button"
             onClick={openEditModal}
@@ -335,73 +335,75 @@ export const StudentDetailPage: React.FC = () => {
             No payments recorded for this student yet. Click &ldquo;Add Payment&rdquo; to log the first instalment.
           </div>
         ) : (
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-            <thead className="bg-slate-50/75 text-xs uppercase tracking-wider font-semibold text-slate-500">
-              <tr>
-                <th className="px-6 py-3.5">Payment ID</th>
-                <th className="px-6 py-3.5">Date</th>
-                <th className="px-6 py-3.5">Mode</th>
-                <th className="px-6 py-3.5">Online Account / Ref</th>
-                <th className="px-6 py-3.5 text-right">Amount</th>
-                {user?.role === 'admin' && <th className="px-6 py-3.5 text-right">Actions</th>}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {payments.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-3.5 font-mono text-xs text-slate-600">#{p.id}</td>
-                  <td className="px-6 py-3.5 text-xs text-slate-700">
-                    {new Date(p.payment_date).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-3.5">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-                      {p.mode}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3.5 text-xs text-slate-600 font-mono">
-                    {p.online_account || '—'}
-                  </td>
-                  <td className="px-6 py-3.5 text-right font-semibold text-emerald-600">
-                    ₹{Number(p.amount).toLocaleString()}
-                  </td>
-                  {user?.role === 'admin' && (
-                    <td className="px-6 py-3.5 text-right space-x-2">
-                      <button
-                        id={`edit-payment-${p.id}`}
-                        onClick={() => {
-                          setEditingPayment(p)
-                          setErrorMessage(null)
-                        }}
-                        className="p-1 rounded-md text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        title="Edit Payment (Admin Only)"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        id={`delete-payment-${p.id}`}
-                        onClick={() => {
-                          if (window.confirm(`Delete payment #${p.id} of ₹${p.amount}?`)) {
-                            deletePaymentMutation.mutate(p.id)
-                          }
-                        }}
-                        className="p-1 rounded-md text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="Delete Payment (Admin Only)"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
-                  )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+              <thead className="bg-slate-50/75 text-xs uppercase tracking-wider font-semibold text-slate-500">
+                <tr>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Payment ID</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Date</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Mode</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Online Account / Ref</th>
+                  <th className="px-6 py-3.5 text-right whitespace-nowrap">Amount</th>
+                  {user?.role === 'admin' && <th className="px-6 py-3.5 text-right whitespace-nowrap">Actions</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {payments.map((p) => (
+                  <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-3.5 font-mono text-xs text-slate-600 whitespace-nowrap">#{p.id}</td>
+                    <td className="px-6 py-3.5 text-xs text-slate-700 whitespace-nowrap">
+                      {new Date(p.payment_date).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-3.5 whitespace-nowrap">
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                        {p.mode}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3.5 text-xs text-slate-600 font-mono whitespace-nowrap">
+                      {p.online_account || '—'}
+                    </td>
+                    <td className="px-6 py-3.5 text-right font-semibold text-emerald-600 whitespace-nowrap">
+                      ₹{Number(p.amount).toLocaleString()}
+                    </td>
+                    {user?.role === 'admin' && (
+                      <td className="px-6 py-3.5 text-right space-x-2 whitespace-nowrap">
+                        <button
+                          id={`edit-payment-${p.id}`}
+                          onClick={() => {
+                            setEditingPayment(p)
+                            setErrorMessage(null)
+                          }}
+                          className="p-1 rounded-md text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Edit Payment (Admin Only)"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          id={`delete-payment-${p.id}`}
+                          onClick={() => {
+                            if (window.confirm(`Delete payment #${p.id} of ₹${p.amount}?`)) {
+                              deletePaymentMutation.mutate(p.id)
+                            }
+                          }}
+                          className="p-1 rounded-md text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          title="Delete Payment (Admin Only)"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
       {/* Edit Student Modal */}
       {showEditStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowEditStudent(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -495,8 +497,8 @@ export const StudentDetailPage: React.FC = () => {
 
       {/* Add Payment Modal */}
       {showAddPayment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowAddPayment(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -586,8 +588,8 @@ export const StudentDetailPage: React.FC = () => {
 
       {/* Edit Payment Modal (Admin Only) */}
       {editingPayment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setEditingPayment(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"

@@ -132,7 +132,7 @@ export const StudentsPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
           <select
             id="filter-batch-select"
             value={selectedBatchId}
@@ -143,7 +143,7 @@ export const StudentsPage: React.FC = () => {
                 setSearchParams(searchParams)
               }
             }}
-            className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
+            className="w-full sm:w-auto px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
           >
             <option value="">All Batches</option>
             {batches.map((b) => (
@@ -163,7 +163,7 @@ export const StudentsPage: React.FC = () => {
                 setSearchParams(searchParams)
               }
             }}
-            className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
+            className="w-full sm:w-auto px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
           >
             <option value="">All Colleges</option>
             {colleges.map((c) => (
@@ -179,7 +179,7 @@ export const StudentsPage: React.FC = () => {
                 searchParams.delete('batch_college_id')
                 setSearchParams(searchParams)
               }}
-              className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+              className="text-xs text-blue-600 hover:text-blue-800 flex items-center justify-center sm:justify-start space-x-1 py-1"
             >
               <span>Clear link filter</span>
               <X className="w-3.5 h-3.5" />
@@ -209,13 +209,13 @@ export const StudentsPage: React.FC = () => {
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
               <thead className="bg-slate-50/75 text-xs uppercase tracking-wider font-semibold text-slate-500">
                 <tr>
-                  <th className="px-6 py-3.5">Student ID &amp; Name</th>
-                  <th className="px-6 py-3.5">Course</th>
-                  <th className="px-6 py-3.5">Batch / College</th>
-                  <th className="px-6 py-3.5 text-right">Required</th>
-                  <th className="px-6 py-3.5 text-right">Paid</th>
-                  <th className="px-6 py-3.5 text-right">Due</th>
-                  <th className="px-6 py-3.5 text-right">Action</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Student ID &amp; Name</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Course</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Batch / College</th>
+                  <th className="px-6 py-3.5 text-right whitespace-nowrap">Required</th>
+                  <th className="px-6 py-3.5 text-right whitespace-nowrap">Paid</th>
+                  <th className="px-6 py-3.5 text-right whitespace-nowrap">Due</th>
+                  <th className="px-6 py-3.5 text-right whitespace-nowrap">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -223,7 +223,7 @@ export const StudentsPage: React.FC = () => {
                   const dueNum = Number(student.total_due)
                   return (
                     <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className="block font-mono text-xs font-semibold text-blue-600">
                           {student.student_number}
                         </span>
@@ -232,22 +232,22 @@ export const StudentsPage: React.FC = () => {
                           <span className="block text-[11px] text-slate-400">Agent: {student.agent_name}</span>
                         )}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
                           {student.course}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-xs">
+                      <td className="px-6 py-4 text-xs whitespace-nowrap">
                         <span className="block font-medium text-slate-800">{student.batch_name || 'N/A'}</span>
                         <span className="text-slate-500">{student.college_name || 'N/A'}</span>
                       </td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900">
+                      <td className="px-6 py-4 text-right font-medium text-slate-900 whitespace-nowrap">
                         ₹{Number(student.total_required).toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 text-right font-medium text-emerald-600">
+                      <td className="px-6 py-4 text-right font-medium text-emerald-600 whitespace-nowrap">
                         ₹{Number(student.total_paid).toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right whitespace-nowrap">
                         <span
                           className={`font-semibold ${
                             dueNum > 0 ? 'text-amber-600' : 'text-slate-400'
@@ -256,7 +256,7 @@ export const StudentsPage: React.FC = () => {
                           ₹{dueNum.toLocaleString()}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right whitespace-nowrap">
                         <Link
                           to={`/students/${student.id}`}
                           className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800 font-medium"
@@ -277,7 +277,7 @@ export const StudentsPage: React.FC = () => {
       {/* Add Student Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg p-6 relative my-8">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowAddModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"

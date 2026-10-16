@@ -88,76 +88,78 @@ export const CollegesPage: React.FC = () => {
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-            <thead className="bg-slate-50/75 text-xs uppercase tracking-wider font-semibold text-slate-500">
-              <tr>
-                <th className="px-6 py-3.5">College Name</th>
-                <th className="px-6 py-3.5">Status</th>
-                <th className="px-6 py-3.5">Added On</th>
-                {user?.role === 'admin' && <th className="px-6 py-3.5 text-right">Actions</th>}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {colleges.map((college) => (
-                <tr key={college.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900 flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold">
-                      <Building2 className="w-4 h-4" />
-                    </div>
-                    <span>{college.name}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center space-x-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                        college.is_active
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-slate-100 text-slate-600'
-                      }`}
-                    >
-                      {college.is_active ? (
-                        <>
-                          <CheckCircle className="w-3 h-3 text-emerald-600" />
-                          <span>Active</span>
-                        </>
-                      ) : (
-                        <>
-                          <Ban className="w-3 h-3 text-slate-400" />
-                          <span>Deactivated</span>
-                        </>
-                      )}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-xs text-slate-500">
-                    {new Date(college.created_at).toLocaleDateString()}
-                  </td>
-                  {user?.role === 'admin' && (
-                    <td className="px-6 py-4 text-right">
-                      {college.is_active ? (
-                        <button
-                          id={`deactivate-college-${college.id}`}
-                          onClick={() => deactivateMutation.mutate(college.id)}
-                          disabled={deactivateMutation.isPending}
-                          className="inline-flex items-center space-x-1 text-xs text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-md font-medium transition-colors"
-                        >
-                          <Ban className="w-3 h-3" />
-                          <span>Deactivate</span>
-                        </button>
-                      ) : (
-                        <span className="text-xs text-slate-400 italic">Deactivated</span>
-                      )}
-                    </td>
-                  )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+              <thead className="bg-slate-50/75 text-xs uppercase tracking-wider font-semibold text-slate-500">
+                <tr>
+                  <th className="px-6 py-3.5 whitespace-nowrap">College Name</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Status</th>
+                  <th className="px-6 py-3.5 whitespace-nowrap">Added On</th>
+                  {user?.role === 'admin' && <th className="px-6 py-3.5 text-right whitespace-nowrap">Actions</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {colleges.map((college) => (
+                  <tr key={college.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-slate-900 flex items-center space-x-3 whitespace-nowrap">
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold shrink-0">
+                        <Building2 className="w-4 h-4" />
+                      </div>
+                      <span className="truncate">{college.name}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center space-x-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
+                          college.is_active
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {college.is_active ? (
+                          <>
+                            <CheckCircle className="w-3 h-3 text-emerald-600" />
+                            <span>Active</span>
+                          </>
+                        ) : (
+                          <>
+                            <Ban className="w-3 h-3 text-slate-400" />
+                            <span>Deactivated</span>
+                          </>
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                      {new Date(college.created_at).toLocaleDateString()}
+                    </td>
+                    {user?.role === 'admin' && (
+                      <td className="px-6 py-4 text-right whitespace-nowrap">
+                        {college.is_active ? (
+                          <button
+                            id={`deactivate-college-${college.id}`}
+                            onClick={() => deactivateMutation.mutate(college.id)}
+                            disabled={deactivateMutation.isPending}
+                            className="inline-flex items-center space-x-1 text-xs text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-md font-medium transition-colors"
+                          >
+                            <Ban className="w-3 h-3" />
+                            <span>Deactivate</span>
+                          </button>
+                        ) : (
+                          <span className="text-xs text-slate-400 italic">Deactivated</span>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Create College Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowCreateModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"

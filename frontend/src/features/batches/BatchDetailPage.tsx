@@ -97,17 +97,17 @@ export const BatchDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-3">
+      <div className="flex items-start sm:items-center space-x-3 min-w-0">
         <Link
           to="/batches"
-          className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white transition-colors"
+          className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white transition-colors shrink-0"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <div>
-          <div className="flex items-center space-x-3">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{batch.name}</h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 truncate">{batch.name}</h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 shrink-0">
               Batch #{batch.id}
             </span>
           </div>
@@ -227,8 +227,8 @@ export const BatchDetailPage: React.FC = () => {
 
       {/* Link College Modal */}
       {showLinkModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowLinkModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"

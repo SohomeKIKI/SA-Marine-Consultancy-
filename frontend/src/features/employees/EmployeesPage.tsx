@@ -230,16 +230,16 @@ export const EmployeesPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-slate-400" />
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
             <select
               value={roleFilter}
               onChange={(e) => {
                 setRoleFilter(e.target.value)
                 setPage(1)
               }}
-              className="bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-auto bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -253,7 +253,7 @@ export const EmployeesPage: React.FC = () => {
               setStatusFilter(e.target.value)
               setPage(1)
             }}
-            className="bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full sm:w-auto bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -273,11 +273,11 @@ export const EmployeesPage: React.FC = () => {
             <table className="w-full text-left border-collapse text-sm">
               <thead>
                 <tr className="bg-slate-50/75 border-b border-slate-200 text-xs font-semibold uppercase text-slate-500 tracking-wider">
-                  <th className="py-3 px-4">User</th>
-                  <th className="py-3 px-4">Role</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Joined</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3 px-4 whitespace-nowrap">User</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Role</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Joined</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -285,7 +285,7 @@ export const EmployeesPage: React.FC = () => {
                   const isSelf = u.id === currentUser?.id
                   return (
                     <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="font-semibold text-slate-900 flex items-center space-x-2">
                           <span>{u.display_name ? u.display_name : u.name}</span>
                           {isSelf && (
@@ -302,7 +302,7 @@ export const EmployeesPage: React.FC = () => {
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <span
                           className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
                             u.role === 'admin'
@@ -314,7 +314,7 @@ export const EmployeesPage: React.FC = () => {
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center space-x-1.5 text-xs font-medium px-2 py-0.5 rounded-full ${
                             u.is_active
@@ -331,11 +331,11 @@ export const EmployeesPage: React.FC = () => {
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-xs text-slate-500">
+                      <td className="py-3.5 px-4 text-xs text-slate-500 whitespace-nowrap">
                         {new Date(u.created_at).toLocaleDateString()}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end space-x-1">
                           <button
                             onClick={() => handleOpenEdit(u)}
@@ -410,7 +410,7 @@ export const EmployeesPage: React.FC = () => {
 
         {/* Pagination controls */}
         {totalPages > 1 && (
-          <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+          <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row gap-3 items-center justify-between text-xs text-slate-500">
             <div>
               Showing {users.length} of {total} accounts
             </div>
@@ -439,9 +439,9 @@ export const EmployeesPage: React.FC = () => {
 
       {/* Create User Dialog */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 sticky top-0 bg-white z-10">
               <h3 className="font-semibold text-slate-900">Create Employee Account</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
@@ -532,9 +532,9 @@ export const EmployeesPage: React.FC = () => {
 
       {/* Edit User Dialog */}
       {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 sticky top-0 bg-white z-10">
               <h3 className="font-semibold text-slate-900">Edit User: {editingUser.name}</h3>
               <button
                 onClick={() => setEditingUser(null)}
@@ -612,9 +612,9 @@ export const EmployeesPage: React.FC = () => {
 
       {/* Reset Password Dialog */}
       {resettingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 sticky top-0 bg-white z-10">
               <h3 className="font-semibold text-slate-900">Reset Password: {resettingUser.name}</h3>
               <button
                 onClick={() => setResettingUser(null)}

@@ -12,6 +12,8 @@ import {
   Building2,
   Users,
   User as UserIcon,
+  Menu,
+  X,
 } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { api } from '../api/client'
@@ -23,6 +25,7 @@ export const Layout: React.FC = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [showNotifications, setShowNotifications] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Poll unread count every 30 seconds
   const { data: unreadData } = useQuery<{ unread_count: number }>({
@@ -80,15 +83,27 @@ export const Layout: React.FC = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <Link to="/batches" className="flex items-center space-x-3 group">
+          <div className="flex items-center space-x-3 sm:space-x-8 min-w-0">
+            {/* Mobile Hamburger Button */}
+            <button
+              id="mobile-menu-button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-hidden"
+              aria-label="Toggle Navigation"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            <Link to="/batches" className="flex items-center space-x-2.5 sm:space-x-3 group min-w-0">
               <img
                 src="/logo.png"
                 alt="SA Marine Consultancy Logo"
-                className="w-9 h-9 rounded-lg object-contain shadow-xs group-hover:scale-105 transition-transform"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-contain shadow-xs group-hover:scale-105 transition-transform shrink-0"
               />
-              <div>
-                <span className="font-bold text-slate-900 text-lg tracking-tight">SA Marine Consultancy</span>
+              <div className="min-w-0">
+                <span className="font-bold text-slate-900 text-sm sm:text-lg tracking-tight block truncate">
+                  SA Marine Consultancy
+                </span>
               </div>
             </Link>
 
@@ -114,7 +129,7 @@ export const Layout: React.FC = () => {
             </nav>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
             {/* Notifications Menu */}
             <div className="relative">
               <button
@@ -135,7 +150,7 @@ export const Layout: React.FC = () => {
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-white shadow-xl border border-slate-200 py-2 z-50">
+                <div className="absolute right-0 mt-2 w-72 sm:w-80 md:w-96 max-w-[calc(100vw-2rem)] rounded-xl bg-white shadow-xl border border-slate-200 py-2 z-50">
                   <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
                     <span className="font-semibold text-slate-900 text-sm">Notifications</span>
                     {unreadCount > 0 && (
@@ -186,7 +201,7 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* User Profile Tag & Header Link */}
-            <div className="flex items-center space-x-3 border-l border-slate-200 pl-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 border-l border-slate-200 pl-2.5 sm:pl-4">
               <Link
                 to="/profile"
                 id="header-profile-link"
@@ -228,13 +243,115 @@ export const Layout: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile Dropdown Drawer Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-4 space-y-2 shadow-lg animate-in slide-in-from-top duration-150">
+            <div className="py-2 px-1 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">
+                  {(user?.display_name || user?.name || 'U').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <span className="block text-xs font-semibold text-slate-900">{user?.display_name || user?.name}</span>
+                  <span className="block text-[11px] text-slate-500">{user?.email}</span>
+                </div>
+              </div>
+              <span
+                className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${
+                  user?.role === 'admin'
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'bg-emerald-100 text-emerald-700'
+                }`}
+              >
+                {user?.role}
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              {navLinks.map((link) => {
+                const Icon = link.icon
+                const isActive = location.pathname.startsWith(link.to)
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-blue-50 text-blue-700 font-semibold'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{link.label}</span>
+                  </Link>
+                )
+              })}
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  location.pathname === '/profile'
+                    ? 'bg-blue-50 text-blue-700 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <UserIcon className="w-4 h-4" />
+                <span>Account Profile</span>
+              </Link>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  handleLogout()
+                }}
+                className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 w-full pb-24 md:pb-8">
         <Outlet />
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 flex items-center justify-around h-16 shadow-lg">
+        {navLinks.slice(0, 4).map((link) => {
+          const Icon = link.icon
+          const isActive = location.pathname.startsWith(link.to)
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-[10px] font-medium transition-colors ${
+                isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <Icon className={`w-5 h-5 mb-0.5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+              <span className="truncate">{link.label}</span>
+            </Link>
+          )
+        })}
+        <Link
+          to="/profile"
+          className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-[10px] font-medium transition-colors ${
+            location.pathname === '/profile' ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          <UserIcon className={`w-5 h-5 mb-0.5 ${location.pathname === '/profile' ? 'text-blue-600' : 'text-slate-400'}`} />
+          <span>Profile</span>
+        </Link>
+      </nav>
+
+      <footer className="hidden md:block border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
         SA Marine Consultancy &copy; {new Date().getFullYear()} — Internal Management System
       </footer>
     </div>

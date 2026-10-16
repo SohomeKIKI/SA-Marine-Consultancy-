@@ -74,7 +74,7 @@ export const AuditLogPage: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap gap-3 items-center">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center">
         <select
           id="audit-filter-action"
           value={filterAction}
@@ -82,7 +82,7 @@ export const AuditLogPage: React.FC = () => {
             setFilterAction(e.target.value)
             setPage(1)
           }}
-          className="px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 bg-white"
+          className="w-full sm:w-auto px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 bg-white"
         >
           <option value="">All Actions</option>
           {actions.map((act) => (
@@ -99,7 +99,7 @@ export const AuditLogPage: React.FC = () => {
             setFilterEntityType(e.target.value)
             setPage(1)
           }}
-          className="px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 bg-white"
+          className="w-full sm:w-auto px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 bg-white"
         >
           <option value="">All Entities</option>
           {entityTypes.map((ent) => (
@@ -118,7 +118,7 @@ export const AuditLogPage: React.FC = () => {
             setFilterEntityId(e.target.value)
             setPage(1)
           }}
-          className="px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 w-40"
+          className="w-full sm:w-40 px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
         />
 
         <input
@@ -130,13 +130,13 @@ export const AuditLogPage: React.FC = () => {
             setFilterUserId(e.target.value)
             setPage(1)
           }}
-          className="px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600 w-36"
+          className="w-full sm:w-36 px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-600"
         />
 
         {(filterAction || filterEntityType || filterEntityId || filterUserId) && (
           <button
             onClick={resetFilters}
-            className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1"
+            className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 text-center sm:text-left"
           >
             Clear Filters
           </button>
@@ -164,13 +164,13 @@ export const AuditLogPage: React.FC = () => {
             <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
               <thead className="bg-slate-50/75 uppercase tracking-wider font-semibold text-slate-500">
                 <tr>
-                  <th className="px-5 py-3.5">Timestamp</th>
-                  <th className="px-5 py-3.5">User</th>
-                  <th className="px-5 py-3.5">Action</th>
-                  <th className="px-5 py-3.5">Target</th>
-                  <th className="px-5 py-3.5">Field</th>
-                  <th className="px-5 py-3.5">Delta (Old &rarr; New)</th>
-                  <th className="px-5 py-3.5">IP Address</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Timestamp</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">User</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Action</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Target</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Field</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Delta (Old &rarr; New)</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">IP Address</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -181,10 +181,10 @@ export const AuditLogPage: React.FC = () => {
                       <td className="px-5 py-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">
                         {new Date(log.timestamp).toLocaleString()}
                       </td>
-                      <td className="px-5 py-3 font-semibold text-slate-800">
+                      <td className="px-5 py-3 font-semibold text-slate-800 whitespace-nowrap">
                         {log.user_id ? `User #${log.user_id}` : 'System / Anonymous'}
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         <span
                           className={`inline-block px-2 py-0.5 rounded-md font-bold uppercase text-[10px] ${
                             log.action === 'create'
@@ -199,7 +199,7 @@ export const AuditLogPage: React.FC = () => {
                           {log.action}
                         </span>
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         <span className="font-semibold text-slate-900">{log.entity_type || '—'}</span>
                         {log.entity_id && (
                           <span className="text-slate-400 font-mono text-[11px] ml-1">
@@ -207,10 +207,10 @@ export const AuditLogPage: React.FC = () => {
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3 font-mono text-slate-600">
+                      <td className="px-5 py-3 font-mono text-slate-600 whitespace-nowrap">
                         {log.field || '—'}
                       </td>
-                      <td className="px-5 py-3 max-w-xs truncate">
+                      <td className="px-5 py-3 max-w-xs truncate whitespace-nowrap">
                         {isChange ? (
                           <span className="font-mono text-[11px]">
                             <span className="text-red-600 line-through mr-1">{log.old_value || 'null'}</span>
@@ -221,7 +221,7 @@ export const AuditLogPage: React.FC = () => {
                           <span className="text-slate-400 italic">—</span>
                         )}
                       </td>
-                      <td className="px-5 py-3 font-mono text-slate-400 text-[11px]">
+                      <td className="px-5 py-3 font-mono text-slate-400 text-[11px] whitespace-nowrap">
                         {log.ip_address || '—'}
                       </td>
                     </tr>
@@ -232,8 +232,8 @@ export const AuditLogPage: React.FC = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-500">
+          <div className="px-4 sm:px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <span className="text-xs text-slate-500 text-center sm:text-left">
               Showing page <span className="font-semibold text-slate-900">{logData.page}</span> of{' '}
               <span className="font-semibold text-slate-900">{logData.pages}</span> ({logData.total} records)
             </span>
