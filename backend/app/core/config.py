@@ -11,6 +11,16 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite:///./batchcrm_dev.db"
 
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_database_url(cls, v: str) -> str:
+        if isinstance(v, str):
+            if v.startswith("postgres://"):
+                return v.replace("postgres://", "postgresql+psycopg://", 1)
+            elif v.startswith("postgresql://") and not v.startswith("postgresql+"):
+                return v.replace("postgresql://", "postgresql+psycopg://", 1)
+        return v
+
     # Security
     JWT_SECRET_KEY: str = "dev_super_secret_jwt_key_at_least_32_bytes_long_12345"
     REFRESH_SECRET_KEY: str = "dev_super_secret_refresh_key_at_least_32_bytes_67890"
