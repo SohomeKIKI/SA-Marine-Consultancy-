@@ -38,14 +38,17 @@ export const LoginPage: React.FC = () => {
       await login(data.email, data.password)
       navigate(from, { replace: true })
     } catch (err: any) {
-      if (err instanceof ApiError) {
+      const isApi = err instanceof ApiError || err?.name === 'ApiError' || err?.status !== undefined
+      if (isApi) {
         if (err.status === 429) {
           setErrorMessage('Too many failed login attempts. Please try again in 15 minutes.')
+        } else if (err.status >= 500) {
+          setErrorMessage(err.message || 'Server error encountered. Please try again shortly.')
         } else {
           setErrorMessage(err.message || 'Invalid email or password.')
         }
       } else {
-        setErrorMessage('An unexpected network error occurred. Please try again.')
+        setErrorMessage(err?.message || 'An unexpected network error occurred. Please try again.')
       }
     } finally {
       setIsSubmitting(false)

@@ -53,6 +53,8 @@ class ChangePasswordRequest(BaseModel):
 class TokenResponse(BaseModel):
     message: str
     user: UserResponse
+    access_token: Optional[str] = None
+    token_type: Optional[str] = "bearer"
 
 
 class MessageResponse(BaseModel):

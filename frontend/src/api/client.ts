@@ -14,11 +14,29 @@ export class ApiError extends Error {
   }
 }
 
+let authToken: string | null = null
+try {
+  authToken = localStorage.getItem('sa_auth_token')
+} catch {}
+
+export function setAuthToken(token: string | null) {
+  authToken = token
+  try {
+    if (token) localStorage.setItem('sa_auth_token', token)
+    else localStorage.removeItem('sa_auth_token')
+  } catch {}
+}
+
+export function getAuthToken(): string | null {
+  return authToken
+}
+
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
     ...(options.headers as Record<string, string>),
   }
 
@@ -35,11 +53,22 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     try {
       const refreshRes = await fetch(`${API_BASE}/iam/refresh`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        },
         credentials: 'include',
       })
       if (refreshRes.ok) {
+        const refreshData = await refreshRes.json()
+        if (refreshData?.access_token) {
+          setAuthToken(refreshData.access_token)
+          headers['Authorization'] = `Bearer ${refreshData.access_token}`
+        }
         // Retry original request
-        response = await fetch(url, config)
+        response = await fetch(url, { ...options, headers, credentials: 'include' })
+      } else {
+        setAuthToken(null)
       }
     } catch {
       // Refresh failed; proceed with original 401
@@ -64,7 +93,11 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     return {} as T
   }
 
-  return response.json()
+  const data = await response.json()
+  if (data?.access_token) {
+    setAuthToken(data.access_token)
+  }
+  return data as T
 }
 
 export const api = {

@@ -21,14 +21,16 @@ router = APIRouter(prefix="/iam", tags=["IAM"])
 
 
 def set_auth_cookies(response: Response, access_token: str, refresh_token: str) -> None:
+    samesite = settings.COOKIE_SAMESITE
+    is_secure = settings.SECURE_COOKIES or samesite == "none"
     # 15 minutes for access token
     response.set_cookie(
         key="access_token",
         value=access_token,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         httponly=True,
-        secure=settings.SECURE_COOKIES,
-        samesite=settings.COOKIE_SAMESITE,
+        secure=is_secure,
+        samesite=samesite,
         path="/",
     )
     # 7 days for refresh token
@@ -37,15 +39,17 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str) 
         value=refresh_token,
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600,
         httponly=True,
-        secure=settings.SECURE_COOKIES,
-        samesite=settings.COOKIE_SAMESITE,
+        secure=is_secure,
+        samesite=samesite,
         path="/",
     )
 
 
 def clear_auth_cookies(response: Response) -> None:
-    response.delete_cookie(key="access_token", path="/", samesite=settings.COOKIE_SAMESITE)
-    response.delete_cookie(key="refresh_token", path="/", samesite=settings.COOKIE_SAMESITE)
+    samesite = settings.COOKIE_SAMESITE
+    is_secure = settings.SECURE_COOKIES or samesite == "none"
+    response.delete_cookie(key="access_token", path="/", samesite=samesite, secure=is_secure)
+    response.delete_cookie(key="refresh_token", path="/", samesite=samesite, secure=is_secure)
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -64,7 +68,12 @@ def login(
     )
     access_token, refresh_token = service.create_session(db, user)
     set_auth_cookies(response, access_token, refresh_token)
-    return TokenResponse(message="Login successful", user=UserResponse.model_validate(user))
+    return TokenResponse(
+        message="Login successful",
+        user=UserResponse.model_validate(user),
+        access_token=access_token,
+        token_type="bearer",
+    )
 
 
 @router.post("/refresh", response_model=TokenResponse)
@@ -88,7 +97,12 @@ def refresh_token(
 
     new_access_token, new_refresh_token, user = service.refresh_session(db, token_str)
     set_auth_cookies(response, new_access_token, new_refresh_token)
-    return TokenResponse(message="Token refreshed successfully", user=UserResponse.model_validate(user))
+    return TokenResponse(
+        message="Token refreshed successfully",
+        user=UserResponse.model_validate(user),
+        access_token=new_access_token,
+        token_type="bearer",
+    )
 
 
 @router.post("/logout", response_model=MessageResponse)

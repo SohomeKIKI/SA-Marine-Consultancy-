@@ -36,6 +36,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "https://sa-marine-consultancy.onrender.com",
+        "https://sa-marine-consultancy.vercel.app",
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
-import { api } from '../api/client'
+import { api, setAuthToken } from '../api/client'
 import { User } from '../types'
 
 export interface AuthContextType {
@@ -44,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Ignore network errors on logout
     } finally {
+      setAuthToken(null)
       setUser(null)
     }
   }
