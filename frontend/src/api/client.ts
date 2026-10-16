@@ -1,4 +1,6 @@
-const API_BASE = '/api'
+const DEFAULT_API_URL = 'https://sa-marine-consultancy.onrender.com'
+const BACKEND_URL = (import.meta.env.VITE_API_URL ?? (import.meta.env.MODE === 'test' ? '' : DEFAULT_API_URL)).replace(/\/+$/, '')
+const API_BASE = BACKEND_URL ? `${BACKEND_URL}/api` : '/api'
 
 export class ApiError extends Error {
   status: number

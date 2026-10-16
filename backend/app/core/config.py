@@ -31,7 +31,12 @@ class Settings(BaseSettings):
     COOKIE_SAMESITE: Literal["lax", "none", "strict"] = "lax"
 
     # CORS
-    CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"]
+    CORS_ORIGINS: Union[List[str], str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "https://sa-marine-consultancy.onrender.com",
+    ]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod

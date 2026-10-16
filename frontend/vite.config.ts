@@ -15,8 +15,9 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://sa-marine-consultancy.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
     },
   },
