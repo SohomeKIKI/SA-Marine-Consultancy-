@@ -12,14 +12,7 @@ Batch CRM is a high-reliability internal CRM built from scratch to manage admiss
 
 ---
 
-## Default Seed Credentials
 
-| Role | Email | Password |
-|---|---|---|
-| **Administrator** | `admin@batchcrm.com` | `AdminPassword123!` |
-| **Employee** | `employee@batchcrm.com` | `EmployeePassword123!` |
-
----
 
 ## Role & Permissions Matrix
 
