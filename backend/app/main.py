@@ -99,3 +99,28 @@ def db_health(db: Session = Depends(get_db)):
         return {"status": "ok", "database": "connected"}
     except Exception as e:
         return {"status": "error", "database": str(e)}
+
+
+@app.get(f"{settings.API_V1_STR}/health/debug", tags=["Health"])
+def debug_health(db: Session = Depends(get_db)):
+    try:
+        from sqlalchemy import inspect
+        inspector = inspect(db.bind)
+        tables = inspector.get_table_names()
+        user_count = 0
+        admin_exists = False
+        if "users" in tables:
+            from app.iam.models import User
+            user_count = db.query(User).count()
+            admin = db.query(User).filter_by(email="admin@batchcrm.com").first()
+            admin_exists = admin is not None
+        return {
+            "status": "ok",
+            "db_type": db.bind.dialect.name,
+            "tables": tables,
+            "user_count": user_count,
+            "admin_exists": admin_exists,
+        }
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
